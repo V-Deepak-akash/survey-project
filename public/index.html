@@ -9,20 +9,23 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f4f4f4;
-            margin-top: 100px;
+            margin: 0;
+            padding: 50px;
         }
         .container {
             background-color: #fff;
             padding: 20px;
-            width: 300px;
+            max-width: 400px;
             margin: 0 auto;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         h2 {
             color: #333;
         }
         .option {
             margin: 10px 0;
+            text-align: left;
         }
         button {
             width: 100%;
@@ -30,8 +33,10 @@
             background-color: #007BFF;
             color: white;
             border: none;
+            border-radius: 4px;
             margin-top: 10px;
             cursor: pointer;
+            font-size: 16px;
         }
         button:disabled {
             background-color: #ccc;
@@ -39,6 +44,12 @@
         }
         #result {
             margin-top: 20px;
+            text-align: center;
+        }
+        .percentage {
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -63,42 +74,45 @@
     <script>
         const submitBtn = document.getElementById('submitBtn');
         let selectedOption = '';
-    
+
         document.querySelectorAll('input[name="vote"]').forEach(input => {
             input.addEventListener('change', (event) => {
                 selectedOption = event.target.value;
             });
         });
-    
+
         async function submitVote() {
             if (!selectedOption) {
                 alert("Please select an option!");
                 return;
             }
-    
+
             submitBtn.disabled = true;
-    
+
             // Send the vote to the server
             const response = await fetch('/submit-vote', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vote: selectedOption })
             });
-    
+
             const result = await response.json();
             displayResult(result);
         }
-    
+
         function displayResult(data) {
+            const totalVotes = data.trueVotes + data.falseVotes;
+            const truePercentage = ((data.trueVotes / totalVotes) * 100).toFixed(2);
+            const falsePercentage = ((data.falseVotes / totalVotes) * 100).toFixed(2);
+
             document.getElementById('result').innerHTML = `
                 <h3>Survey Results</h3>
-                <p>True (Kamala Harris): ${data.trueVotes} votes</p>
-                <p>False (Donald Trump): ${data.falseVotes} votes</p>
+                <p>Kamala Harris: ${data.trueVotes} votes (${truePercentage}%)</p>
+                <p>Donald Trump: ${data.falseVotes} votes (${falsePercentage}%)</p>
             `;
             submitBtn.disabled = false; // Re-enable the button for further submissions
         }
     </script>
-    
 
 </body>
 </html>
