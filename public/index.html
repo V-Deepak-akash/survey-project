@@ -63,40 +63,42 @@
     <script>
         const submitBtn = document.getElementById('submitBtn');
         let selectedOption = '';
-
+    
         document.querySelectorAll('input[name="vote"]').forEach(input => {
             input.addEventListener('change', (event) => {
                 selectedOption = event.target.value;
             });
         });
-
+    
         async function submitVote() {
             if (!selectedOption) {
                 alert("Please select an option!");
                 return;
             }
-
+    
             submitBtn.disabled = true;
-
+    
             // Send the vote to the server
             const response = await fetch('/submit-vote', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vote: selectedOption })
             });
-
+    
             const result = await response.json();
             displayResult(result);
         }
-
+    
         function displayResult(data) {
             document.getElementById('result').innerHTML = `
                 <h3>Survey Results</h3>
                 <p>True (Kamala Harris): ${data.trueVotes} votes</p>
                 <p>False (Donald Trump): ${data.falseVotes} votes</p>
             `;
+            submitBtn.disabled = false; // Re-enable the button for further submissions
         }
     </script>
+    
 
 </body>
 </html>

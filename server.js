@@ -1,13 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const path = require('path');
 const port = process.env.PORT || 3000;
 
-// In-memory storage for vote counts (you can replace this with a database in a real application)
+// In-memory storage for vote counts
 let voteCounts = { true: 0, false: 0 };
 
 app.use(bodyParser.json());
-app.use(express.static('public')); // Serve the HTML/CSS/JS files from 'public' directory
+app.use(express.static('public')); // Serve static files from the 'public' folder
+
+// Serve the index.html file on the root URL
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Handle vote submission
 app.post('/submit-vote', (req, res) => {
@@ -19,11 +25,13 @@ app.post('/submit-vote', (req, res) => {
         voteCounts.false++;
     }
 
-    // Send back the updated vote counts
-    res.json(voteCounts);
+    // Send back the updated vote counts, with keys the frontend expects
+    res.json({
+        trueVotes: voteCounts.true,
+        falseVotes: voteCounts.false
+    });
 });
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-
