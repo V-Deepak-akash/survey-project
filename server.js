@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // In-memory storage for vote counts (you can replace this with a database in a real application)
 let voteCounts = { true: 0, false: 0 };
@@ -24,5 +24,6 @@ app.post('/submit-vote', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
+
