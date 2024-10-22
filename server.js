@@ -20,8 +20,8 @@ app.get('/survey1', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'survey1.html')); // Serve Survey 1
 });
 
-app.get('/survey2', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'survey2.html')); // Serve Survey 2
+app.get('/surveys', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'surveys.html')); // Serve Survey 2
 });
 
 app.get('/contact', (req, res) => {
