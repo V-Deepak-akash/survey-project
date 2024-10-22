@@ -3,167 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Election Betting Survey</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f5;
-            margin: 0;
-            padding: 50px;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #007BFF;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #333;
-        }
-        .option {
-            margin: 20px 0;
-            text-align: left;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #e7f0ff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .option:hover {
-            background-color: #d1e3ff;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: transform 0.2s ease, background-color 0.3s ease;
-        }
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        button:hover:enabled {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        #result {
-            margin-top: 30px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .result-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .percentage {
-            font-weight: bold;
-            font-size: 20px;
-            margin-top: 10px;
-        }
-        .odds {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #555;
-        }
-        footer {
-            margin-top: 50px;
-            font-size: 14px;
-            color: #888;
-        }
-    </style>
+    <title>Betting Survey</title>
+    <link rel="stylesheet" href="styles.css"> <!-- External CSS file -->
 </head>
 <body>
 
-    <div class="container">
-        <h1>Election Betting Survey</h1>
-        <h2>Who will win on November 5th Election?</h2>
-        <div class="option" onclick="selectVote('true')">
-            <label>
-                <input type="radio" name="vote" value="true" hidden> Kamala Harris
-            </label>
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">BetMaster</div>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#">Surveys</a></li>
+            <li><a href="#">My Bets</a></li>
+            <li><a href="#">Profile</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Place Your Bets on the Latest Events</h1>
+        <p>Join thousands of users in predicting outcomes and win exciting rewards.</p>
+        <button onclick="window.location.href='surveys.html'">View Surveys</button>
+    </section>
+
+    <!-- Survey List Section -->
+    <section class="survey-list">
+        <h2>Available Surveys</h2>
+        <div class="survey-card">
+            <h3>Who will win the November 5th Election?</h3>
+            <p>Choose between Kamala Harris or Donald Trump and place your bets.</p>
+            <button onclick="window.location.href='survey1.html'">Bet Now</button>
         </div>
-        <div class="option" onclick="selectVote('false')">
-            <label>
-                <input type="radio" name="vote" value="false" hidden> Donald Trump
-            </label>
+        <div class="survey-card">
+            <h3>Will Bitcoin reach $100k by December?</h3>
+            <p>Bet on whether Bitcoin will hit this milestone before the year ends.</p>
+            <button onclick="window.location.href='survey2.html'">Bet Now</button>
         </div>
-        <button id="submitBtn" onclick="submitVote()">Place Your Bet</button>
-        <div id="result"></div>
-        <div class="odds">
-            <p>Current Odds:</p>
-            <p>Kamala Harris: 1.75</p>
-            <p>Donald Trump: 2.25</p>
-        </div>
-    </div>
+    </section>
 
     <footer>
-        <p>&copy; 2024 Election Betting App</p>
+        <p>&copy; 2024 BetMaster. All rights reserved.</p>
     </footer>
-
-    <script>
-        const submitBtn = document.getElementById('submitBtn');
-        let selectedOption = '';
-
-        function selectVote(vote) {
-            selectedOption = vote;
-            // Highlight the selected option
-            document.querySelectorAll('.option').forEach(option => {
-                option.style.backgroundColor = option.querySelector('input').value === vote ? '#d1e3ff' : '#e7f0ff';
-            });
-        }
-
-        async function submitVote() {
-            if (!selectedOption) {
-                alert("Please select an option!");
-                return;
-            }
-
-            submitBtn.disabled = true;
-
-            // Send the vote to the server
-            const response = await fetch('/submit-vote', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ vote: selectedOption })
-            });
-
-            const result = await response.json();
-            displayResult(result);
-        }
-
-        function displayResult(data) {
-            const totalVotes = data.trueVotes + data.falseVotes;
-            const truePercentage = totalVotes > 0 ? ((data.trueVotes / totalVotes) * 100).toFixed(2) : 0;
-            const falsePercentage = totalVotes > 0 ? ((data.falseVotes / totalVotes) * 100).toFixed(2) : 0;
-
-            document.getElementById('result').innerHTML = `
-                <h3>Survey Results</h3>
-                <p>Kamala Harris: ${data.trueVotes} votes (${truePercentage}%)</p>
-                <p>Donald Trump: ${data.falseVotes} votes (${falsePercentage}%)</p>
-            `;
-            // Show the results with animation
-            const resultDiv = document.getElementById('result');
-            resultDiv.classList.add('result-visible');
-
-            submitBtn.disabled = false; // Re-enable the button for further submissions
-        }
-    </script>
 
 </body>
 </html>
